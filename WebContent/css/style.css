@@ -2,7 +2,8 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-image: url("../img/background.jpg");
+	
+	background-color: #1b2642;
 	background-size: 50%;
 }
 .Container {
@@ -30,11 +31,12 @@ body {
 	padding-top: 20px;
 	padding-bottom: 20px;
 	border-radius: 5px;
-	color: darkgreen;
-	background-color: lightgreen;
+	color: black;
+	background-color: #408080;
 }
 .Form h2 {
 	margin-top: 0;
+	
 }
 .field {
 	margin-left: 50px;

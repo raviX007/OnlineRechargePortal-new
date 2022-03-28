@@ -5,14 +5,16 @@ public class User {
 	private String fname;
 	private String email;
 	private String mobile;
+	private String operatorName;
 	private String username;
 	private String password;
-	public User(int id, String fname, String email, String mobile, String username, String password) {
+	public User(int id, String fname, String email, String mobile,String operatorName, String username, String password) {
 		super();
 		this.id = id;
 		this.fname = fname;
 		this.email = email;
 		this.mobile = mobile;
+		this.operatorName=operatorName;
 		this.username = username;
 		this.password = password;
 	}
@@ -40,6 +42,13 @@ public class User {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+	public String getOperatorName() {
+		 return operatorName;
+	}
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

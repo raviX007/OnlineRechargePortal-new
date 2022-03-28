@@ -14,7 +14,7 @@ import dao.UserDetailsDAO;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	String fname,email,mobileno,username,password;
+	String fname,email,mobileno,operatorName,username,password;
 	HttpSession session;
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException
@@ -23,8 +23,14 @@ public class RegisterServlet extends HttpServlet {
 		fname = req.getParameter("fullname");
 		email = req.getParameter("email");
 		mobileno = req.getParameter("mobileno");
-		username = req.getParameter("user");
+		operatorName =req.getParameter("operatorName");
+		username = req.getParameter("user");		
 		password = req.getParameter("pass");
+		System.out.println("fname:"+fname);
+		System.out.println("email:"+email);
+		System.out.println("operatorName"+operatorName);
+		System.out.println("username"+username);
+		System.out.println("password"+password);
 		if(fname.isEmpty()||email.isEmpty()||mobileno.isEmpty()||username.isEmpty()||password.isEmpty())
 		{
 			req.setAttribute("message","<h2 align='center' style='color:red;'>Please fill all fields, and try again!</h2>");
@@ -37,7 +43,7 @@ public class RegisterServlet extends HttpServlet {
 			
 			UserDetailsDAO user = new UserDetailsDAO(driver,url);
 			
-			if(user.insert_user(fname, email, mobileno, username, password))
+			if(user.insert_user(fname, email, mobileno,operatorName, username, password))
 			{	
 				User u = user.check_user(username, password);
 				session = req.getSession(true);
@@ -45,6 +51,7 @@ public class RegisterServlet extends HttpServlet {
 				session.setAttribute("fname",u.getFname());
 				session.setAttribute("email",u.getEmail());
 				session.setAttribute("mobileno",u.getMobile());
+				session.setAttribute("operatorName",u.getOperatorName());
 				session.setAttribute("username",u.getUsername());
 				session.setAttribute("password",u.getPassword());
 				req.setAttribute("message","<h2 align='center' style='margin-left:50px;color:green;display:inline;'>User Registration Successful!</h2>");

@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.CallableStatement;
+
 public class UserDetailsDAO 
 {
 	Connection con;
@@ -14,9 +16,7 @@ public class UserDetailsDAO
 	ResultSet rs;
 	public UserDetailsDAO(String driver,String url)
 	{
-		//System.out.println("Userdao called");
-		//System.out.println("Url is:"+url);
-		//System.out.println(driver);
+	
 		try
 		{
 			Class.forName(driver);
@@ -33,7 +33,7 @@ public class UserDetailsDAO
 			e.printStackTrace();
 		}
 	}
-	public boolean insert_user(String fname,String email,String mobileno,String username,String password)
+	public boolean insert_user(String fname,String email,String mobileno,String operatorName,String username,String password)
 	{
 		boolean flag = true;
 		try 
@@ -48,9 +48,20 @@ public class UserDetailsDAO
 					break;
 				}
 			}
+			rs=stmt.executeQuery("select * from user_details order by user_id desc");
+			Integer userId=null;
+			while(rs.next()) {
+				userId=rs.getInt(1);
+				break;
+			}
+			if(userId==null) {
+				userId=1;
+			}else {
+				userId=userId+1;
+			}
 			if(flag)
 			{
-				int i = stmt.executeUpdate("insert into user_details(full_name,email,mobileno,username,password) VALUES('"+fname+"','"+email+"','"+mobileno+"','"+username+"','"+password+"')");
+				int i = stmt.executeUpdate("insert into user_details(user_id,full_name,email,mobileno,username,password,operator_name) VALUES('"+userId+"','"+fname+"','"+email+"','"+mobileno+"','"+username+"','"+password+"','"+operatorName+"')");
 				if(i==1)
 					return true;
 			}
@@ -63,12 +74,40 @@ public class UserDetailsDAO
 		}
 		return false;
 	}
+	public User check_user(String username) 
+	{
+		try
+		{
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("select user_id,full_name,email,mobileno,username,password,operator_name from user_details");
+			while(rs.next())
+			{
+				if(rs.getString(5).equalsIgnoreCase(username))
+				{
+					int id = rs.getInt(1);
+					String fname = rs.getString(2);
+					String email = rs.getString(3);
+					String mobile = rs.getString(4);
+					String user = rs.getString(5);
+					String pass = rs.getString(6);
+					String operatorName = rs.getString(7);
+					return new User(id,fname,email,mobile,operatorName,user,pass);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
 	public User check_user(String username,String password) 
 	{
 		try
 		{
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("select user_id,full_name,email,mobileno,username,password from user_details");
+			rs = stmt.executeQuery("select user_id,full_name,email,mobileno,username,password,operator_name from user_details");
 			while(rs.next())
 			{
 				if(rs.getString(5).equalsIgnoreCase(username)&&rs.getString(6).equals(password))
@@ -79,7 +118,8 @@ public class UserDetailsDAO
 					String mobile = rs.getString(4);
 					String user = rs.getString(5);
 					String pass = rs.getString(6);
-					return new User(id,fname,email,mobile,user,pass);
+					String operatorName = rs.getString(7);
+					return new User(id,fname,email,mobile,operatorName,user,pass);
 				}
 			}
 		}
@@ -89,7 +129,7 @@ public class UserDetailsDAO
 		}
 		return null;
 	}
-	public int check_user_details(int userid,String fname,String email,String mobileno,String username)
+	public int check_user_details(int userid,String fname,String email,String mobileno,String username, String operatorName)
 	{
 		int flag = 0;
 		try
@@ -98,7 +138,8 @@ public class UserDetailsDAO
 			rs = stmt.executeQuery("select * from user_details");
 			while(rs.next())
 			{
-				if(rs.getString(3).equalsIgnoreCase(email)&&rs.getString(4).equals(mobileno)&&rs.getString(5).equalsIgnoreCase(username))
+				if(rs.getString(3).equalsIgnoreCase(email)&&rs.getString(4).equals(mobileno)&&rs.getString(5).equalsIgnoreCase(username)
+						&&rs.getString(7).equalsIgnoreCase(operatorName))
 				{
 					if(rs.getString(2).equalsIgnoreCase(fname))
 					{
@@ -138,12 +179,12 @@ public class UserDetailsDAO
 		}
 		return flag;
 	}
-	public boolean user_details_update(int userid,String fname,String email,String mobileno,String username)
+	public boolean user_details_update(int userid,String fname,String email,String mobileno,String operatorName,String username)
 	{
 		try
 		{
 			stmt = con.createStatement();
-			stmt.executeUpdate("update user_details set full_name='"+fname+"',email='"+email+"',mobileno='"+mobileno+"',username='"+username+"' where user_id="+userid+";");
+			stmt.executeUpdate("update user_details set full_name='"+fname+"',email='"+email+"',mobileno='"+mobileno+"',operator_name='"+operatorName+"',username='"+username+"' where user_id="+userid+";");
 			return true;
 		}
 		catch(Exception e)
@@ -307,16 +348,24 @@ public class UserDetailsDAO
 		{
 			stmt = con.createStatement();
 			Integer planID = null;
-			rs = stmt.executeQuery("select * from recharge_plan_details order by plan_id desc");
+			/*rs = stmt.executeQuery("select * from recharge_plan_details order by plan_id desc");
 			while(rs.next()) {
 				planID = rs.getInt(1);
 				break;
-			}
-			if(planID != null) {
+			}*/
+			 String rcgPlns = "{ call Recharge_plans(?) }";
+			 CallableStatement cS = (CallableStatement) con.prepareCall(rcgPlns);
+	         cS.registerOutParameter(1, java.sql.Types.INTEGER);
+	         cS.executeUpdate();
+	         planID = cS.getInt(1);
+	          System.out.println("planID" +planID);  
+			
+	         if(planID != null) {
 				planID++;
-			}else {
+			 }else {
 				planID = 1;
-			}
+			 }
+	         System.out.println("planId,operatorId,planDetails,PlanValidity,Price" +planID+ " ," +operatorid+",'"+plandetails+"','"+planvalidity+"',"+price);
 			int i = stmt.executeUpdate("insert into recharge_plan_details(plan_id,operator_id,plan_details,plan_validity,price) values("+ planID + "," + operatorid+",'"+plandetails+"','"+planvalidity+"',"+price+")");
 			if(i==1)
 			{
@@ -326,6 +375,7 @@ public class UserDetailsDAO
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return false;
 	}

@@ -19,6 +19,8 @@
 					<input class="field" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Email Address"><br><br>
 					<input class="field" type="tel" name="mobileno" pattern="[0-9]{10}" title="Enter 10 Digit Number" placeholder="Mobile Number"><br><br>
 					<i class="note">(Minimum 8-12 Characters, Numbers)*</i>
+					
+					<input class="field" type="text" name="operatorName" pattern="[A-Za-z ]{5,40}" title="Enter 5-40 Character" placeholder="operator Name"><br><br>
 					<input class="field" type="text" name="user" pattern="[A-Za-z0-9]{8,12}" title="Enter 8 - 12 Alpha Numeric Characters" placeholder="Username"><br><br>
 					<i class="note">(Minimum 8-12 Characters, Numbers, Symbols)*</i>
 					<input class="field" type="password" name="pass" pattern=".{8,12}" title="Enter 8 - 12 Alpha Numeric Characters with Symbols" placeholder="Password"><br><br>

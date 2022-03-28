@@ -21,6 +21,7 @@ public class ChangePasswordServlet extends HttpServlet {
 		String oldpass = req.getParameter("oldpass");
 		String newpass = req.getParameter("newpass");
 		String userid =  req.getParameter("id");
+		System.out.println("username is : " + userid);
 		if(oldpass.isEmpty()||newpass.isEmpty()||userid.isEmpty())
 		{
 			req.setAttribute("message","<h2 align='center' style='color:red;'>Please fill all fields, and try again!</h2>");

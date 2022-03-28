@@ -17,7 +17,7 @@ public class LogoutServlet extends HttpServlet {
 	{
 		session = req.getSession();
 		session.invalidate();
-		req.setAttribute("message","<h2 align='center' style='color:green;'>Logout Successful!</h2>");
+		req.setAttribute("message","<h2 align='center' style='color:black;'>Logout Successful!</h2>");
 		req.getRequestDispatcher("").forward(req, res);
 	}
 }

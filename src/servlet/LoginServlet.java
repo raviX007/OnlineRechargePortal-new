@@ -29,8 +29,9 @@ public class LoginServlet extends HttpServlet {
 		else
 		{
 			String driver = this.getServletContext().getInitParameter("driverpath");
-			//String url = this.getServletContext().getInitParameter("url");
-			String url ="jdbc:mysql://localhost:3306/onlinerechargeportal?characterEncoding=utf8";
+			String url = this.getServletContext().getInitParameter("url");
+			
+			//String url ="jdbc:mysql://localhost:3306/onlinerechargeportal?characterEncoding=utf8";
 			
 			UserDetailsDAO user = new UserDetailsDAO(driver,url);
 			User u = user.check_user(username, password);

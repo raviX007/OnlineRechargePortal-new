@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" import="java.util.*"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -27,8 +27,9 @@
 					<% String str = (String)session.getAttribute("fname"); 
 						if(str!=null)
 						{
-							request.setAttribute("id",session.getAttribute("id"));
-							out.print("<h2 align='center'>&nbsp;&nbsp;&nbsp;Welcome "+str+"&nbsp;&nbsp;&nbsp;</h2>");
+							request.setAttribute("id",session.getAttribute("id")); 
+							out.print("<h2 align='center'>&nbsp;&nbsp;&nbsp;Welcome "+str+"&nbsp;&nbsp;&nbsp;</h2>"); 
+							out.print("<h2 align='center'>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</h2>"); 
 						}
 						else
 							request.getRequestDispatcher("").forward(request, response);
@@ -46,6 +47,9 @@
 							</tr>
 							<tr>
 								<td>Mobile Number:</td><td><input type="tel" name="mobileno" pattern="[0-9]{10}" title="Enter 10 Digit Number" placeholder="Mobile Number" value="<%=(String)session.getAttribute("mobileno")%>"></td>
+							</tr>
+							<tr>
+								<td>Operator Details:</td><td><input type="opd" name="operator" pattern="[A-Za-z ]{4,40}" title="Enter 4-40 Character" placeholder="Operator Name" value="<%=(String)session.getAttribute("operatorName")%>"></td>
 							</tr>
 							<tr>
 								<td>Username:</td><td><input type="text" name="user" pattern="[A-Za-z0-9]{8,12}" title="Enter 8 - 12 Alpha Numeric Characters" placeholder="Username" value="<%=(String)session.getAttribute("username")%>"></td>
